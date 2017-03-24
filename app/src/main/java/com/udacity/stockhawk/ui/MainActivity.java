@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
     RecyclerView stockRecyclerView;
-    @SuppressWarnings("WeakerAccess");
+    @SuppressWarnings("WeakerAccess")
     FloatingActionButton fab;
     @BindView(R.id.swipe_refresh)
     SwipeRefreshLayout swipeRefreshLayout;
@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(this,
                 Contract.Quote.URI,
-                Contract.Quote.QUOTE_COLUMNS.toArray(new String[]{}),
+                Contract.Quote.QUOTE_COLUMNS,
                 null, null, Contract.Quote.COLUMN_SYMBOL);
     }
 
@@ -156,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         if (data.getCount() != 0) {
             error.setVisibility(View.GONE);
+        } else {
+            error.setVisibility(View.VISIBLE);
         }
         adapter.setCursor(data);
     }
