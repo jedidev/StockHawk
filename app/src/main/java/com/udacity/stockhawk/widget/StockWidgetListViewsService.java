@@ -11,6 +11,8 @@ import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 
 import static com.udacity.stockhawk.data.Contract.Quote.POSITION_ID;
+import static com.udacity.stockhawk.ui.StockDetailActivity.SELECTED_HISTORY;
+import static com.udacity.stockhawk.ui.StockDetailActivity.SELECTED_SYMBOL;
 
 public class StockWidgetListViewsService extends RemoteViewsService {
 
@@ -59,16 +61,26 @@ public class StockWidgetListViewsService extends RemoteViewsService {
 
                 if (mCursor.moveToPosition(i)) {
 
-                    remoteViews.setTextViewText(R.id.symbol, mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL)));
-                    remoteViews.setTextViewText(R.id.price, mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_PRICE)));
-                    remoteViews.setTextViewText(R.id.change, mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE)));
+                    String symbolString = mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_SYMBOL));
+                    String priceString = mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_PRICE));
+                    String changeString = mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE));
+                    String historyString = mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_HISTORY));
 
-                    float price =  Float.parseFloat(mCursor.getString(mCursor.getColumnIndex(Contract.Quote.COLUMN_PERCENTAGE_CHANGE)));
+                    remoteViews.setTextViewText(R.id.symbol, symbolString);
+                    remoteViews.setTextViewText(R.id.price, priceString);
+                    remoteViews.setTextViewText(R.id.change, changeString);
+
+                    float price =  Float.parseFloat(priceString);
                     if (price < 0) {
                         remoteViews.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_red);
                     } else {
                         remoteViews.setInt(R.id.change, "setBackgroundResource", R.drawable.percent_change_pill_green);
                     }
+
+                    final Intent fillInIntent = new Intent();
+                    fillInIntent.putExtra(SELECTED_SYMBOL, symbolString);
+                    fillInIntent.putExtra(SELECTED_HISTORY, historyString);
+                    remoteViews.setOnClickFillInIntent(R.id.list_item, fillInIntent);
                 }
 
                 return remoteViews;
