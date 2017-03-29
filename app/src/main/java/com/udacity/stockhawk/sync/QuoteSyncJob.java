@@ -72,12 +72,12 @@ public final class QuoteSyncJob {
                 String symbol = iterator.next();
 
                 Stock stock = quotes.get(symbol);
-                StockQuote quote = stock.getQuote();
 
-                if (stock.getName() == null) {
+                if (stock == null || stock.getName() == null) {
                     PrefUtils.removeStock(context, symbol);
                     continue;
                 }
+                StockQuote quote = stock.getQuote();
 
                 float price = quote.getPrice().floatValue();
                 float change = quote.getChange().floatValue();
